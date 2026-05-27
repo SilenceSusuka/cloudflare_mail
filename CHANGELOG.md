@@ -13,6 +13,8 @@
 - feat: |Frontend| 新增 `DISABLE_SHOW_GITHUB_FOR_USER` 配置，可仅对普通用户隐藏 Header 的 GitHub/版本入口，admin 仍可见（issue #1041）
 - feat: |Frontend| 将邮箱地址凭证弹窗升级为“地址凭证与连接方式”，复用普通用户与 admin 创建邮箱结果弹窗；支持通过 `ENABLE_AGENT_EMAIL_INFO` 展示 AI Agent 接入信息，并通过 `SMTP_IMAP_PROXY_CONFIG` 展示 SMTP/IMAP 客户端连接信息
 - docs: |随机子域名| 在前端“启用随机子域名”提示与 `subdomain` / `worker-vars` 文档（中英）中明确说明：要让 `name@<随机>.abc.com` 真正收到邮件，必须在基础域名 DNS 中为 `*` 子域添加通配 MX 记录，Email Routing 子域不继承父域配置（issue #1035）
+- feat: |Frontend| 外观设置增加「界面风格」：标准 / 二次元柔和风（Naive `themeOverrides`、页面渐变与毛玻璃主区、Google Fonts「M PLUS Rounded 1c」、Header/Footer 装饰）；选项写入 localStorage `uiPreset`，并同步 `index.html` / PWA `theme-color`
+- feat: |Frontend| 新增第三档「萌系装饰架」：`public` 下蕾丝条、蝴蝶结、点缀图与详情区框架；浅色生效，暗色下自动隐藏位图装饰；站点图标默认使用 `favicon.ico`
 
 ### Bug Fixes
 
@@ -22,8 +24,13 @@
 - fix: |AI 提取| 将 AI 邮件识别默认 Workers AI 模型切换为支持 JSON Mode 且未弃用的 `@cf/meta/llama-3.1-8b-instruct-fast`，并在文档中补充 `@cf/zai-org/glm-4.7-flash` 结构化输出兼容性提示（issue #1029）
 - fix: |CI| 将 GitHub Actions 与 e2e Docker 镜像统一升级到 Node.js 24，适配 Wrangler 4.90.0 的运行时要求
 - fix: |Frontend| 修复 iOS Safari 点击输入框时因移动端表单控件字号过小导致页面自动放大的问题
+- fix: |Frontend| 暗色模式下侧边栏、Tab 栏、当前用户提示卡、邮件列表/详情、表单控件等残留白底/亮粉块，统一为深紫黑 surface 变量体系（`--surface` / `--accent-soft`），Naive 暗色 `themeOverrides` 同步对齐
 
 ### Improvements
+
+- improve: |Frontend| 二次元/萌系界面（Satou 系）视觉收紧：浅色以 CSS 变量与白底卡片为主、粉色作强调；品牌 Header（48px 图标、主副标题、胶囊导航、管理后台更克制）；邮件列表与详情分区卡片化、元信息 `.meta-pill` 替代蓝色标签；Admin 竖向侧栏一体化卡片、减少全局蕾丝/蝴蝶结装饰
+- improve: |Frontend| 后台「邮件」分组内层 Tab 改为整栏可横向滚动的胶囊导航；`MailBox`/`SendBox` 列表仅展示标题、收发摘要与时间（ID/FROM/TO 详情保留在右侧），后台传入 `listPaneMinRatio` 加宽约 0.36，并收紧 `min-width`/省略号以避免列表横向滚动条
+- change: |Frontend| 移除外观「界面风格」选项；全站固定萌系装饰架（`app-theme-kawaii` + Satou 主题），`localStorage` 中 `uiPreset` 自动迁移为 `kawaii`
 
 ## v1.8.0
 

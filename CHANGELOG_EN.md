@@ -13,6 +13,8 @@
 - feat: |Frontend| Add `DISABLE_SHOW_GITHUB_FOR_USER` to hide the Header GitHub/version entry from normal users while keeping it visible to admin users (issue #1041)
 - feat: |Frontend| Upgrade the address credential dialog to "Address Credentials & Connection Methods" and reuse it for both normal users and admin-created addresses; support showing AI Agent access via `ENABLE_AGENT_EMAIL_INFO` and SMTP/IMAP client settings via `SMTP_IMAP_PROXY_CONFIG`
 - docs: |Random Subdomain| Clarify in the "Use Random Subdomain" frontend tip and the `subdomain` / `worker-vars` docs (zh & en) that receiving mail on `name@<random>.abc.com` requires a wildcard `*` MX record under the base domain in DNS, because Cloudflare Email Routing does not inherit the apex configuration onto subdomains (issue #1035)
+- feat: |Frontend| Add Appearance setting **UI style**: Standard vs pastel/anime (Naive `themeOverrides`, page gradient + frosted main shell, Google Font “M PLUS Rounded 1c”, subtle Header/Footer styling). Persists in `uiPreset` localStorage; updates `index.html` / PWA `theme-color`
+- feat: |Frontend| Add third preset **Kawaii frame**: lace strips, bow, and accent PNGs from `public`, wrapping the mail detail area and address row; decorations apply in light mode only and hide in dark mode; favicon defaults to `favicon.ico`
 
 ### Bug Fixes
 
@@ -22,8 +24,13 @@
 - fix: |AI Extract| Switch the default Workers AI model for AI email recognition to the JSON Mode-compatible, non-deprecated `@cf/meta/llama-3.1-8b-instruct-fast`, and document structured-output compatibility guidance for `@cf/zai-org/glm-4.7-flash` (issue #1029)
 - fix: |CI| Upgrade GitHub Actions and e2e Docker images to Node.js 24 to satisfy Wrangler 4.90.0 runtime requirements
 - fix: |Frontend| Prevent iOS Safari from auto-zooming the page when focusing mobile form controls with small font sizes
+- fix: |Frontend| Dark mode: sidebar, tab bars, current-user banner, mail list/detail, and form controls no longer show bright white/pink blocks; unified deep purple-black surface tokens (`--surface`, `--accent-soft`) with matching Naive dark `themeOverrides`
 
 ### Improvements
+
+- improve: |Frontend| Refine pastel anime/kawaii (Satou-style) UI: CSS variables and white-forward cards with pink as accent; brand header (48px icon, title + subtitle, pill nav, calmer admin); mail list/detail panels with clearer cards; `.meta-pill` for metadata instead of blue tags; unified admin sidebar card; fewer global lace/bow decorations
+- improve: |Frontend| Admin mail-group sub-tabs use a full-width pill nav bar with horizontal scroll when needed; `MailBox`/`SendBox` list rows show only title, from/to summary line, and time (full metadata stays in the detail pane); admin passes `listPaneMinRatio` (~0.36) for a wider list column; tighten flex min-width + ellipsis to avoid horizontal scrollbars in the list
+- change: |Frontend| Remove Appearance **UI style** picker; the whole site always uses the kawaii frame theme (`app-theme-kawaii` + Satou tokens). Legacy `uiPreset` localStorage values are migrated to `kawaii`
 
 ## v1.8.0
 
