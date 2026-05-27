@@ -105,7 +105,8 @@ onMounted(() => {
     </div>
     <div v-else>
       <AddressBar />
-      <n-tabs v-if="settings.address" type="card" v-model:value="indexTab" :placement="globalTabplacement">
+      <div v-if="settings.address" class="kawaii-index-frame">
+      <n-tabs type="card" v-model:value="indexTab" :placement="globalTabplacement">
         <template #prefix v-if="!isMobile">
           <n-button @click="useSimpleIndex = true" tertiary size="small">
             <template #icon>
@@ -155,6 +156,7 @@ onMounted(() => {
           <About />
         </n-tab-pane>
       </n-tabs>
+      </div>
     </div>
   </div>
 </template>

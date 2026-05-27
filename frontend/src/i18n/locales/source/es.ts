@@ -116,6 +116,7 @@ export const esMessages = {
   "views.index.AccountSettings.clearSentItems": "Vaciar enviados",
   "views.admin.Account.clearSentItems": "Vaciar enviados",
   "views.Header.title": "Cloudflare Correo Temporal",
+  "views.Header.brandSubtitle": "Satou Matsuzaka Mail",
   "views.admin.DatabaseManager.code_db_version": "Versión de BD requerida por el código",
   "views.user.UserOauth2Callback.codeNotFound": "código no encontrado",
   "views.admin.AccountSettings.config": "Configuración",

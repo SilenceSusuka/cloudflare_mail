@@ -4,6 +4,7 @@ import {
     useLocalStorage, useSessionStorage
 } from '@vueuse/core'
 
+
 export const useGlobalState = createGlobalState(
     () => {
         const isDark = useDark()
@@ -11,6 +12,10 @@ export const useGlobalState = createGlobalState(
         const loading = ref(false);
         const announcement = useLocalStorage('announcement', '');
         const useSimpleIndex = useLocalStorage('useSimpleIndex', false);
+        const uiPresetStorage = useStorage('uiPreset', 'kawaii')
+        if (uiPresetStorage.value !== 'kawaii') {
+            uiPresetStorage.value = 'kawaii'
+        }
         const openSettings = ref({
             fetched: false,
             title: '',

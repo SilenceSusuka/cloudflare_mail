@@ -25,6 +25,11 @@ const props = defineProps({
     default: () => { },
     required: true
   },
+  listPaneMinRatio: {
+    type: Number,
+    default: undefined,
+    required: false
+  },
   deleteMail: {
     type: Function,
     default: () => { },
@@ -33,6 +38,23 @@ const props = defineProps({
 })
 
 const { isDark, mailboxSplitSize, loading, useUTCDate } = useGlobalState()
+
+const effectiveSplitRatio = computed(() => {
+  const min = props.listPaneMinRatio
+  if (typeof min === 'number' && !Number.isNaN(min)) {
+    return Math.max(mailboxSplitSize.value, min)
+  }
+  return mailboxSplitSize.value
+})
+
+const listSummaryLine = (row) => {
+  const to = (row.to_mail || '').trim() || '—'
+  if (!props.showEMailFrom) return to
+  const from = (row.address || '').trim()
+  if (!from) return to
+  return `${from} · ${to}`
+}
+
 const data = ref([])
 
 const count = ref(0)
@@ -99,7 +121,12 @@ const clickRow = async (row) => {
 };
 
 const mailItemClass = (row) => {
-  return curMail.value && row.id == curMail.value.id ? (isDark.value ? 'overlay overlay-dark-backgroud' : 'overlay overlay-light-backgroud') : '';
+  const active = curMail.value && row.id == curMail.value.id
+  if (!active) return ''
+  if (isDark.value) {
+    return 'overlay overlay-dark-backgroud'
+  }
+  return 'mail-list-row-active'
 };
 
 const onSpiltSizeChange = (size) => {
@@ -210,32 +237,23 @@ onMounted(async () => {
           </n-button>
         </n-space>
       </div>
-      <n-split direction="horizontal" :max="0.75" :min="0.25" :default-size="mailboxSplitSize"
+      <n-split class="mail-split left" direction="horizontal" :max="0.75" :min="0.25" :default-size="effectiveSplitRatio"
         :on-update:size="onSpiltSizeChange">
         <template #1>
-          <div style="overflow: auto; min-height: 60vh; max-height: 100vh;">
-            <n-list hoverable clickable>
+          <div class="mail-list-panel" style="min-height: 60vh; max-height: 100vh;">
+            <n-list hoverable clickable class="mail-list-inner">
               <n-list-item v-for="row in data" v-bind:key="row.id" @click="() => clickRow(row)"
                 :class="mailItemClass(row)">
                 <template #prefix v-if="multiActionMode">
                   <n-checkbox v-model:checked="row.checked" />
                 </template>
-                <n-thing :title="row.subject">
-                  <template #description>
-                    <n-tag type="info">
-                      ID: {{ row.id }}
-                    </n-tag>
-                    <n-tag type="info">
-                      {{ utcToLocalDate(row.created_at, useUTCDate) }}
-                    </n-tag>
-                    <n-tag v-if="showEMailFrom" type="info">
-                      FROM: {{ row.address }}
-                    </n-tag>
-                    <n-tag type="info">
-                      TO: {{ row.to_mail }}
-                    </n-tag>
-                  </template>
-                </n-thing>
+                <div class="mail-list-entry">
+                  <div class="mail-list-subject">{{ row.subject || '—' }}</div>
+                  <div class="mail-list-summary">
+                    <div class="mail-list-from">{{ listSummaryLine(row) }}</div>
+                    <div class="mail-list-time">{{ utcToLocalDate(row.created_at, useUTCDate) }}</div>
+                  </div>
+                </div>
               </n-list-item>
             </n-list>
           </div>
@@ -289,25 +307,16 @@ onMounted(async () => {
           {{ t('refresh') }}
         </n-button>
       </div>
-      <div style="overflow: auto; min-height: 60vh; max-height: 100vh;">
-        <n-list hoverable clickable>
+      <div class="mail-list-panel mail-list-panel--mobile" style="min-height: 60vh; max-height: 100vh;">
+        <n-list hoverable clickable class="mail-list-inner">
           <n-list-item v-for="row in data" v-bind:key="row.id" @click="() => clickRow(row)">
-            <n-thing :title="row.subject">
-              <template #description>
-                <n-tag type="info">
-                  ID: {{ row.id }}
-                </n-tag>
-                <n-tag type="info">
-                  {{ utcToLocalDate(row.created_at, useUTCDate) }}
-                </n-tag>
-                <n-tag v-if="showEMailFrom" type="info">
-                  FROM: {{ row.address }}
-                </n-tag>
-                <n-tag type="info">
-                  TO: {{ row.to_mail }}
-                </n-tag>
-              </template>
-            </n-thing>
+            <div class="mail-list-entry">
+              <div class="mail-list-subject">{{ row.subject || '—' }}</div>
+              <div class="mail-list-summary">
+                <div class="mail-list-from">{{ listSummaryLine(row) }}</div>
+                <div class="mail-list-time">{{ utcToLocalDate(row.created_at, useUTCDate) }}</div>
+              </div>
+            </div>
           </n-list-item>
         </n-list>
       </div>
@@ -351,6 +360,63 @@ onMounted(async () => {
 <style scoped>
 .left {
   text-align: left;
+}
+
+.mail-split {
+  min-width: 0;
+}
+
+.mail-list-panel {
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.mail-list-inner {
+  min-width: 0;
+}
+
+.mail-list-entry {
+  min-width: 0;
+  width: 100%;
+}
+
+.mail-list-subject {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--text, #3d3138);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.mail-list-summary {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-soft, #8c7a84);
+  min-width: 0;
+}
+
+.mail-list-from {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mail-list-time {
+  color: var(--accent, #e66a9b);
+}
+
+:deep(.mail-list-inner .n-list-item) {
+  min-width: 0;
 }
 
 .center {

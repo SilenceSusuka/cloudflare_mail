@@ -31,7 +31,7 @@ const deleteSenboxMail = async (curMailId) => {
             </n-button>
         </n-input-group>
         <SendBox style="margin-top: 10px;" :enableUserDeleteEmail="true" :deleteMail="deleteSenboxMail"
-            :fetchMailData="fetchData" :showEMailFrom="true" />
+            :fetchMailData="fetchData" :showEMailFrom="true" :list-pane-min-ratio="0.36" />
     </div>
 </template>
 

@@ -442,6 +442,10 @@ export const MESSAGE_REGISTRY = {
       "en": "Cloudflare Temp Email",
       "zh": "Cloudflare 临时邮件"
     },
+    "brandSubtitle": {
+      "en": "Satou Matsuzaka Mail",
+      "zh": "松坂砂糖的邮箱"
+    },
     "user": {
       "en": "User",
       "zh": "用户"

@@ -20,7 +20,7 @@ const { t } = useScopedI18n('views.User')
 <template>
     <div>
         <UserBar />
-        <n-tabs v-if="userSettings.user_email" type="card" v-model:value="userTab" :placement="globalTabplacement">
+        <n-tabs v-if="userSettings.user_email" type="card" v-model:value="userTab" :placement="globalTabplacement" class="user-tabs">
             <n-tab-pane name="address_management" :tab="t('address_management')">
                 <AddressMangement />
             </n-tab-pane>

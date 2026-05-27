@@ -1,0 +1,21 @@
+:root {
+  --x-padding: 16px;
+  --app-shell-pad: 12px;
+}
+
+/* 暗色萌系主题 */
+html.dark.app-theme-kawaii body {
+  background: linear-gradient(165deg, var(--bg) 0%, #1a1428 48%, #1f1824 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+}
+
+html.dark.app-theme-kawaii .app-shell {
+  padding: var(--app-shell-pad);
+  border-radius: 20px;
+  box-sizing: border-box;
+  background: rgba(31, 27, 43, 0.72);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}

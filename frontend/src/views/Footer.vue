@@ -9,7 +9,7 @@ const { t } = useScopedI18n('views.Footer')
 </script>
 
 <template>
-    <div>
+    <div class="footer-root">
         <n-divider class="footer-divider" />
         <div style="text-align: center; padding: 20px">
             <n-space justify="center">
@@ -29,5 +29,14 @@ const { t } = useScopedI18n('views.Footer')
 .footer-divider {
     margin: 0;
     padding: 0 var(--x-padding);
+}
+
+html.app-theme-kawaii .footer-root {
+    padding-top: 4px;
+}
+
+html.app-theme-kawaii .footer-root :deep(.n-divider) {
+    margin-top: 8px;
+    opacity: 0.85;
 }
 </style>

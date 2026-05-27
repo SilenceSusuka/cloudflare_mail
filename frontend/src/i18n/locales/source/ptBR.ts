@@ -116,6 +116,7 @@ export const ptBRMessages = {
   "views.index.AccountSettings.clearSentItems": "Limpar itens enviados",
   "views.admin.Account.clearSentItems": "Limpar itens enviados",
   "views.Header.title": "Cloudflare E-mail Temporário",
+  "views.Header.brandSubtitle": "Satou Matsuzaka Mail",
   "views.admin.DatabaseManager.code_db_version": "Versão do banco exigida pelo código",
   "views.user.UserOauth2Callback.codeNotFound": "código não encontrado",
   "views.admin.AccountSettings.config": "Configuração",
