@@ -107,7 +107,7 @@ const handleSaveToS3 = async (filename, blob) => {
       <!-- 操作按钮 -->
       <n-popconfirm v-if="enableUserDeleteEmail" @positive-click="handleDelete">
         <template #trigger>
-          <n-button tertiary type="error" size="small">{{ t('delete') }}</n-button>
+          <n-button tertiary type="error" size="small" class="mail-delete-btn">{{ t('delete') }}</n-button>
         </template>
         {{ t('deleteMailTip') }}
       </n-popconfirm>
@@ -231,7 +231,7 @@ const handleSaveToS3 = async (filename, blob) => {
 }
 
 .dark-mode .mail-text {
-  color: #e0e0e0;
+  color: var(--text);
 }
 
 .mail-iframe {

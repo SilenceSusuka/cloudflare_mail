@@ -12,7 +12,7 @@ const props = defineProps({
 
 const {
     mailboxSplitSize, useIframeShowMail, preferShowTextMail, configAutoRefreshInterval,
-    globalTabplacement, useSideMargin, useUTCDate, useSimpleIndex
+    globalTabplacement, useSideMargin, useUTCDate, useSimpleIndex,
 } = useGlobalState()
 const isMobile = useIsMobile()
 

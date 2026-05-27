@@ -18,7 +18,7 @@ const router = useRouter()
 
 const {
     jwt, settings, showAddressCredential, userJwt,
-    isTelegram, addressPassword
+    isTelegram, addressPassword,
 } = useGlobalState()
 
 const { locale, t } = useScopedI18n('views.index.AddressBar')

@@ -3,6 +3,7 @@ import {
   darkTheme,
 } from 'naive-ui'
 import { computed, onMounted, watchEffect } from 'vue'
+import { animeThemeOverridesDark, animeThemeOverridesLight } from './theme/animeTheme'
 import { useScript } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import { useGlobalState } from './store'
@@ -14,12 +15,15 @@ import { getNaiveLocaleConfig } from './i18n/naive-locale'
 import { DEFAULT_LOCALE, isSupportedLocale } from './i18n/utils'
 
 const {
-  isDark, loading, useSideMargin, telegramApp, isTelegram
+  isDark, loading, useSideMargin, telegramApp, isTelegram,
 } = useGlobalState()
 const adClient = import.meta.env.VITE_GOOGLE_AD_CLIENT;
 const adSlot = import.meta.env.VITE_GOOGLE_AD_SLOT;
 const { locale } = useI18n({ useScope: 'global' });
 const theme = computed(() => isDark.value ? darkTheme : null)
+const themeOverrides = computed(() => (
+  isDark.value ? animeThemeOverridesDark : animeThemeOverridesLight
+))
 const localeConfig = computed(() => getNaiveLocaleConfig(isSupportedLocale(locale.value) ? locale.value : DEFAULT_LOCALE))
 const isMobile = useIsMobile()
 const showSideMargin = computed(() => !isMobile.value && useSideMargin.value);
@@ -28,7 +32,10 @@ const gridMaxCols = computed(() => showAd.value ? 8 : 12);
 
 watchEffect(() => {
   if (typeof document === 'undefined') return
-  document.documentElement.lang = isSupportedLocale(locale.value) ? locale.value : DEFAULT_LOCALE
+  const el = document.documentElement
+  el.lang = isSupportedLocale(locale.value) ? locale.value : DEFAULT_LOCALE
+  el.classList.remove('app-theme-anime')
+  el.classList.add('app-theme-kawaii')
 })
 
 // Load Google Ad script at top level (not inside onMounted)
@@ -86,7 +93,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <n-config-provider :locale="localeConfig.locale" :date-locale="localeConfig.dateLocale" :theme="theme">
+  <n-config-provider
+    :locale="localeConfig.locale"
+    :date-locale="localeConfig.dateLocale"
+    :theme="theme"
+    :theme-overrides="themeOverrides"
+  >
     <n-global-style />
     <n-spin description="loading..." :show="loading">
       <n-notification-provider container-style="margin-top: 60px;">
@@ -100,13 +112,15 @@ onMounted(async () => {
             </n-gi>
             <n-gi :span="!showSideMargin ? gridMaxCols : (gridMaxCols - 2)">
               <div class="main">
-                <n-space vertical>
-                  <n-layout style="min-height: 80vh;">
-                    <Header />
-                    <router-view></router-view>
-                  </n-layout>
-                  <Footer />
-                </n-space>
+                <div class="app-shell">
+                  <n-space vertical>
+                    <n-layout class="app-main-layout" style="min-height: 80vh;">
+                      <Header />
+                      <router-view></router-view>
+                    </n-layout>
+                    <Footer />
+                  </n-space>
+                </div>
               </div>
             </n-gi>
             <n-gi v-if="showSideMargin" span="1">
@@ -161,5 +175,10 @@ onMounted(async () => {
 
 .n-space {
   height: 100%;
+}
+
+.app-shell {
+  height: 100%;
+  min-height: 0;
 }
 </style>

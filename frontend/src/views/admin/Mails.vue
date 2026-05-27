@@ -42,6 +42,6 @@ const deleteMail = async (curMailId) => {
         </n-input-group>
         <div style="margin-top: 10px;"></div>
         <MailBox :key="mailBoxKey" :enableUserDeleteEmail="true" :fetchMailData="fetchMailData"
-            :deleteMail="deleteMail" :showFilterInput="true" />
+            :deleteMail="deleteMail" :showFilterInput="true" :list-pane-min-ratio="0.36" />
     </div>
 </template>

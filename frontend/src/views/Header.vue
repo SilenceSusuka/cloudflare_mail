@@ -2,7 +2,7 @@
 import { ref, h, computed, onMounted } from 'vue'
 import { useScopedI18n } from '@/i18n/app'
 import { useHead } from '@unhead/vue'
-import { useRoute, useRouter, RouterLink } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useIsMobile } from '../utils/composables'
 import {
     DarkModeFilled, LightModeFilled, MenuFilled,
@@ -24,11 +24,38 @@ const notification = useNotification()
 
 const {
     toggleDark, isDark, isTelegram, showAdminPage,
-    showAuth, auth, loading, openSettings, preferredLocale, userSettings
+    showAuth, auth, loading, openSettings, preferredLocale, userSettings,
 } = useGlobalState()
 const route = useRoute()
 const router = useRouter()
 const isMobile = useIsMobile()
+
+const isAdminRoute = computed(() => route.path.includes('/admin'))
+const showKawaiiHeaderAccent = computed(
+  () => !isDark.value && !isAdminRoute.value
+)
+
+const goHome = async () => {
+  await router.push(getRouterPathWithLang('/', locale.value))
+  showMobileMenu.value = false
+}
+const goUser = async () => {
+  await router.push(getRouterPathWithLang('/user', locale.value))
+  showMobileMenu.value = false
+}
+const goAdmin = async () => {
+  loading.value = true
+  try {
+    await router.push(getRouterPathWithLang('/admin', locale.value))
+  } finally {
+    loading.value = false
+    showMobileMenu.value = false
+  }
+}
+const onToggleTheme = () => {
+  toggleDark()
+  showMobileMenu.value = false
+}
 
 const showMobileMenu = ref(false)
 const menuValue = computed(() => {
@@ -246,51 +273,94 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div>
-        <n-page-header>
-            <template #title>
-                <h3>{{ openSettings.title || t('title') }}</h3>
-            </template>
-            <template #avatar>
-                <div @click="logoClick">
-                    <n-avatar style="margin-left: 10px;" src="/logo.png" />
+    <div class="header-root">
+        <header
+            class="app-header"
+            :class="{ 'app-header--admin': isAdminRoute, 'app-header--mobile': isMobile }"
+        >
+                <div class="app-header__brand">
+                    <img src="/logo.png" alt="" class="brand-icon" @click="logoClick">
+                    <div class="brand-text">
+                        <div class="brand-title">{{ openSettings.title || t('title') }}</div>
+                        <div class="brand-subtitle">{{ t('brandSubtitle') }}</div>
+                    </div>
                 </div>
-            </template>
-            <template #extra>
-                <n-space align="center" class="header-extra">
-                    <n-menu v-if="!isMobile" mode="horizontal" :options="menuOptions" responsive />
-                    <n-button v-else :text="true" @click="showMobileMenu = !showMobileMenu">
-                        <template #icon>
-                            <n-icon :component="MenuFilled" />
-                        </template>
-                        {{ t('menu') }}
-                    </n-button>
-                    <n-dropdown v-if="!isMobile" :options="languageOptions" @select="changeLocale" trigger="click" class="header-locale-dropdown">
-                        <n-button text size="small" class="header-locale-button" style="padding: 0 10px;">
-                            <template #icon>
-                                <n-icon :component="Language" />
-                            </template>
-                            {{ currentLocaleLabel }}
-                            <n-icon :component="KeyboardArrowDownOutlined" style="margin-left: 4px;" />
-                        </n-button>
-                    </n-dropdown>
-                    <n-button
-                        v-if="!isMobile && showGithubForCurrentUser"
-                        text
-                        size="small"
-                        class="header-version-button"
-                        tag="a"
-                        target="_blank"
-                        href="https://github.com/dreamhunter2333/cloudflare_temp_email"
+                <nav v-if="!isMobile" class="top-nav" aria-label="Main">
+                    <button
+                        type="button"
+                        class="top-nav__item"
+                        :class="{ 'top-nav__item--active': menuValue === 'home' }"
+                        @click="goHome"
                     >
-                        <template #icon>
-                            <n-icon :component="GithubAlt" />
-                        </template>
-                        {{ version || 'Github' }}
-                    </n-button>
-                </n-space>
-            </template>
-        </n-page-header>
+                        <n-icon :component="Home" />
+                        {{ t('home') }}
+                    </button>
+                    <button
+                        v-if="!isTelegram"
+                        type="button"
+                        class="top-nav__item"
+                        :class="{ 'top-nav__item--active': menuValue === 'user' }"
+                        @click="goUser"
+                    >
+                        <n-icon :component="User" />
+                        {{ t('user') }}
+                    </button>
+                    <button
+                        v-if="showAdminPage"
+                        type="button"
+                        class="top-nav__item"
+                        :class="{ 'top-nav__item--active': menuValue === 'admin' }"
+                        @click="goAdmin"
+                    >
+                        <n-icon :component="AdminPanelSettingsFilled" />
+                        Admin
+                    </button>
+                    <button type="button" class="top-nav__item" @click="onToggleTheme">
+                        <n-icon :component="isDark ? LightModeFilled : DarkModeFilled" />
+                        {{ isDark ? t('light') : t('dark') }}
+                    </button>
+                    <n-dropdown :options="languageOptions" @select="changeLocale" trigger="click">
+                        <button type="button" class="top-nav__item">
+                            <n-icon :component="Language" />
+                            {{ currentLocaleLabel }}
+                            <n-icon :component="KeyboardArrowDownOutlined" />
+                        </button>
+                    </n-dropdown>
+                    <a
+                        v-if="openSettings.statusUrl"
+                        class="top-nav__item"
+                        :href="openSettings.statusUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <n-icon :component="MonitorHeartFilled" />
+                        {{ t('status') }}
+                    </a>
+                    <a
+                        v-if="showGithubForCurrentUser"
+                        class="top-nav__item"
+                        href="https://github.com/dreamhunter2333/cloudflare_temp_email"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <n-icon :component="GithubAlt" />
+                        GitHub
+                    </a>
+                    <span v-if="version" class="top-nav__version">{{ version }}</span>
+                </nav>
+                <n-button v-else quaternary @click="showMobileMenu = !showMobileMenu">
+                    <template #icon>
+                        <n-icon :component="MenuFilled" />
+                    </template>
+                    {{ t('menu') }}
+                </n-button>
+                <img
+                    v-if="showKawaiiHeaderAccent && !isMobile"
+                    src="/star.png"
+                    alt=""
+                    class="app-header__accent"
+                >
+        </header>
         <n-drawer v-model:show="showMobileMenu" placement="top" style="height: 100vh;">
             <n-drawer-content :title="t('menu')" closable>
                 <n-menu :options="menuOptions" />
@@ -331,47 +401,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.n-layout-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.header-extra {
-    align-items: center;
-    flex-wrap: nowrap;
-}
-
-.header-extra :deep(.n-space-item) {
-    display: flex;
-    align-items: center;
-}
-
-.header-locale-button {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-locale-button :deep(.n-button__content) {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-locale-button :deep(.n-icon) {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-version-button {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-version-button :deep(.n-button__content) {
-    display: inline-flex;
-    align-items: center;
-}
-
 .mobile-menu-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -410,40 +439,5 @@ onMounted(async () => {
 .mobile-menu-action-arrow {
     flex: 0 0 auto;
     margin-left: 2px;
-}
-
-.n-alert {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.n-card {
-    margin-top: 10px;
-}
-
-.center {
-    display: flex;
-    text-align: left;
-    place-items: center;
-    justify-content: center;
-    margin: 20px;
-}
-
-.n-form .n-button {
-    margin-top: 10px;
-}
-
-@media (max-width: 640px) {
-    :deep(.n-page-header__title) {
-        min-width: 0;
-    }
-
-    :deep(.n-page-header__title h3) {
-        max-width: calc(100vw - 136px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
 }
 </style>
