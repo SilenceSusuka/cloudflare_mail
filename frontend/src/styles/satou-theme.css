@@ -356,6 +356,35 @@ html.app-theme-kawaii .mail-list-panel .n-list-item:hover {
 
 html.app-theme-kawaii .mail-detail-panel {
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 用户中心收件箱：与 Index kawaii-index-frame 对齐的宽度约束 */
+html.app-theme-kawaii .user-mailbox {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+html.app-theme-kawaii .user-tabs .n-tab-pane {
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+html.app-theme-kawaii .user-mailbox .mail-list-panel,
+html.app-theme-kawaii .user-mailbox .mail-detail-panel,
+html.app-theme-kawaii .user-mailbox .mail-detail-card,
+html.app-theme-kawaii .user-mailbox .mail-split {
+  min-width: 0;
+  max-width: 100%;
+}
+
+html.app-theme-kawaii .user-mailbox .mail-list-panel .n-list-item__main {
+  min-width: 0;
+  overflow: hidden;
 }
 
 html.app-theme-kawaii .mail-detail-card {

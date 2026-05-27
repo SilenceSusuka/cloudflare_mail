@@ -60,7 +60,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div style="margin-top: 10px;">
+    <div class="user-mailbox">
         <n-input-group>
             <n-select v-model:value="addressFilter" :options="addressFilterOptions" clearable
                 :placeholder="t('addressQueryTip')" />
@@ -70,6 +70,15 @@ onMounted(() => {
         </n-input-group>
         <div style="margin-top: 10px;"></div>
         <MailBox :key="mailBoxKey" :enableUserDeleteEmail="openSettings.enableUserDeleteEmail" :fetchMailData="fetchMailData"
-            :deleteMail="deleteMail" :showFilterInput="true" />
+            :deleteMail="deleteMail" :showFilterInput="true" :list-pane-min-ratio="0.36" />
     </div>
 </template>
+
+<style scoped>
+.user-mailbox {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+</style>

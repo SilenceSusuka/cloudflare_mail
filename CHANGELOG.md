@@ -24,7 +24,7 @@
 - fix: |AI 提取| 将 AI 邮件识别默认 Workers AI 模型切换为支持 JSON Mode 且未弃用的 `@cf/meta/llama-3.1-8b-instruct-fast`，并在文档中补充 `@cf/zai-org/glm-4.7-flash` 结构化输出兼容性提示（issue #1029）
 - fix: |CI| 将 GitHub Actions 与 e2e Docker 镜像统一升级到 Node.js 24，适配 Wrangler 4.90.0 的运行时要求
 - fix: |Frontend| 修复 iOS Safari 点击输入框时因移动端表单控件字号过小导致页面自动放大的问题
-- fix: |Frontend| 暗色模式下侧边栏、Tab 栏、当前用户提示卡、邮件列表/详情、表单控件等残留白底/亮粉块，统一为深紫黑 surface 变量体系（`--surface` / `--accent-soft`），Naive 暗色 `themeOverrides` 同步对齐
+- fix: |Frontend| 用户中心收件箱邮件列表/详情内容溢出框体：补齐 `list-pane-min-ratio`、Tab 容器与用户页宽度约束，并加强 `MailBox` split 面板与 meta 行截断
 
 ### Improvements
 

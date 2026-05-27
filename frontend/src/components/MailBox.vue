@@ -380,7 +380,7 @@ onBeforeUnmount(() => {
             {{ t('downloadMail') }}
           </n-button>
         </n-space>
-        <n-space v-else align="center">
+        <n-space v-else align="center" :wrap="true">
           <n-button @click="multiActionModeClick(true)" type="primary" tertiary>
             {{ t('multiAction') }}
           </n-button>
@@ -560,6 +560,18 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 
+.mail-split :deep(.n-split-pane-1),
+.mail-split :deep(.n-split-pane-2) {
+  min-width: 0 !important;
+  overflow: hidden;
+}
+
+.mail-detail-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .mail-list-panel {
   overflow-x: hidden;
   overflow-y: auto;
@@ -611,6 +623,11 @@ onBeforeUnmount(() => {
 
 :deep(.mail-list-inner .n-list-item) {
   min-width: 0;
+}
+
+:deep(.mail-list-inner .n-list-item__main) {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .refresh-switch {

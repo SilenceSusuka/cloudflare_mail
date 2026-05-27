@@ -36,3 +36,16 @@ const { t } = useScopedI18n('views.User')
         </n-tabs>
     </div>
 </template>
+
+<style scoped>
+.user-tabs {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.user-tabs :deep(.n-tab-pane) {
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+</style>

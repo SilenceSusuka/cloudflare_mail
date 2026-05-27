@@ -90,19 +90,11 @@ const handleSaveToS3 = async (filename, blob) => {
 <template>
   <div class="mail-content-renderer">
     <!-- 邮件信息标签 -->
-    <n-space>
-      <n-tag type="info">
-        ID: {{ mail.id }}
-      </n-tag>
-      <n-tag type="info">
-        {{ utcToLocalDate(mail.created_at, useUTCDate.value) }}
-      </n-tag>
-      <n-tag type="info">
-        FROM: {{ mail.source }}
-      </n-tag>
-      <n-tag v-if="showEMailTo" type="info">
-        TO: {{ mail.address }}
-      </n-tag>
+    <div class="mail-meta-row">
+      <span class="meta-pill">ID: {{ mail.id }}</span>
+      <span class="meta-pill">{{ utcToLocalDate(mail.created_at, useUTCDate.value) }}</span>
+      <span class="meta-pill">FROM: {{ mail.source }}</span>
+      <span v-if="showEMailTo" class="meta-pill">TO: {{ mail.address }}</span>
 
       <!-- 操作按钮 -->
       <n-popconfirm v-if="enableUserDeleteEmail" @positive-click="handleDelete">
@@ -149,7 +141,7 @@ const handleSaveToS3 = async (filename, blob) => {
         </template>
         {{ t('fullscreen') }}
       </n-button>
-    </n-space>
+    </div>
 
     <!-- AI 提取信息 -->
     <AiExtractInfo :metadata="mail.metadata" />
@@ -213,11 +205,26 @@ const handleSaveToS3 = async (filename, blob) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mail-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mail-content {
   margin-top: 10px;
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow: auto;
 }
 
 .mail-text {

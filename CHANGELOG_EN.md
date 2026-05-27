@@ -25,6 +25,7 @@
 - fix: |CI| Upgrade GitHub Actions and e2e Docker images to Node.js 24 to satisfy Wrangler 4.90.0 runtime requirements
 - fix: |Frontend| Prevent iOS Safari from auto-zooming the page when focusing mobile form controls with small font sizes
 - fix: |Frontend| Dark mode: sidebar, tab bars, current-user banner, mail list/detail, and form controls no longer show bright white/pink blocks; unified deep purple-black surface tokens (`--surface`, `--accent-soft`) with matching Naive dark `themeOverrides`
+- fix: |Frontend| User-center inbox mail list/detail no longer overflow their panels: added `list-pane-min-ratio`, tab/user-page width constraints, stronger `MailBox` split-pane clipping, and meta row ellipsis
 
 ### Improvements
 
